@@ -1,0 +1,33 @@
+{
+  "name": "predefine",
+  "version": "0.0.0",
+  "description": "Predefine your Object.defineProperties to create a more human readable API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha $(find test -name '*.test.js')"
+  },
+  "keywords": [
+    "predefine",
+    "define",
+    "object",
+    "defineProperties",
+    "defineProperties",
+    "configurable",
+    "writable",
+    "get",
+    "set",
+    "getters",
+    "setters",
+    "inherit"
+  ],
+  "author": "Arnout Kazemier",
+  "license": "MIT",
+  "dependencies": {
+    "extendable": "0.0.x",
+    "chai": "1.8.x"
+  },
+  "devDependencies": {
+    "pre-commit": "0.0.x",
+    "mocha": "1.16.x"
+  }
+}
