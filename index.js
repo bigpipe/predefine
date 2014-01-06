@@ -234,7 +234,8 @@ predefine.WRITABLE = {
 };
 
 predefine.READABLE = {
-  enumerable: false
+  enumerable: false,
+  writable: false
 };
 
 //
