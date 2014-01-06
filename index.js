@@ -37,25 +37,25 @@ function descriptor(obj) {
  * Predefine, preconfigure an Object.defineProperty.
  *
  * @param {Object} obj The context, prototype or object we define on.
- * @param {Object} configuration The default description configuration.
+ * @param {Object} pattern The default description.
  * @returns {Function} The function definition.
  * @api public
  */
-function predefine(obj, configuration) {
-  configuration = configuration || predefine.READABLE;
+function predefine(obj, pattern) {
+  pattern = pattern || predefine.READABLE;
 
-  return function predefined(method, value, clean) {
-    var description = { value: value };
-
+  return function predefined(method, description, clean) {
     //
     // If we are given a description compatible Object, use that instead of
     // setting it as value. This allows easy creation of getters and setters.
     //
-    if (predefine.descriptor(value)) description = value;
+    if (!predefine.descriptor(description)) description = {
+      value: description
+    };
 
-    Object.defineProperty(obj, method, clean
-      ? description
-      : predefine.mixin(configuration, description)
+    Object.defineProperty(obj, method, !clean
+      ? predefine.mixin(pattern, description)
+      : description
     );
 
     return predefined;
@@ -76,16 +76,43 @@ var has = Object.prototype.hasOwnProperty;
  * Remove all enumerable properties from an given object.
  *
  * @param {Object} obj The object that needs cleaning.
+ * @param {Array} keep Properties that should be kept.
  * @api public
  */
-function remove(obj) {
+function remove(obj, keep) {
   if (!obj) return false;
+  keep = keep || [];
 
   for (var prop in obj) {
-    if (has.call(obj, prop)) delete obj[prop];
+    if (has.call(obj, prop) && !~keep.indexOf(prop)) {
+      delete obj[prop];
+    }
   }
 
   return true;
+}
+
+/**
+ * Create a description that can be used for Object.create(null, definition) or
+ * Object.defineProperties.
+ *
+ * @param {String} property The name of the property we are going to define.
+ * @param {Object} description The object's description.
+ * @param {Object} pattern Optional pattern that needs to be merged in.
+ * @returns {Object} A object compatible with Object.create & defineProperties.
+ */
+function create(property, description, pattern) {
+  pattern = pattern || {};
+
+  if (!predefine.descriptor(description)) description = {
+    enumberable: false,
+    value: description
+  };
+
+  var definition = {};
+  definition[property] = predefine.mixin(pattern, description);
+
+  return definition;
 }
 
 /**
@@ -191,6 +218,7 @@ function merge(target, additional) {
 //
 predefine.extend = require('extendable');
 predefine.descriptor = descriptor;
+predefine.create = create;
 predefine.remove = remove;
 predefine.merge = merge;
 predefine.mixin = mixin;
