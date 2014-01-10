@@ -34,6 +34,16 @@ function descriptor(obj) {
 }
 
 /**
+ * A Object could override the `hasOwnProperty` method so we cannot blindly
+ * trust the value of `obj.hasOwnProperty` so instead we get `hasOwnProperty`
+ * directly from the Object.
+ *
+ * @type {Function}
+ * @api private
+ */
+var has = Object.prototype.hasOwnProperty;
+
+/**
  * Predefine, preconfigure an Object.defineProperty.
  *
  * @param {Object} obj The context, prototype or object we define on.
@@ -45,6 +55,8 @@ function predefine(obj, pattern) {
   pattern = pattern || predefine.READABLE;
 
   return function predefined(method, description, clean) {
+    if (has.call(obj, method)) return predefined;
+    
     //
     // If we are given a description compatible Object, use that instead of
     // setting it as value. This allows easy creation of getters and setters.
@@ -61,16 +73,6 @@ function predefine(obj, pattern) {
     return predefined;
   };
 }
-
-/**
- * A Object could override the `hasOwnProperty` method so we cannot blindly
- * trust the value of `obj.hasOwnProperty` so instead we get `hasOwnProperty`
- * directly from the Object.
- *
- * @type {Function}
- * @api private
- */
-var has = Object.prototype.hasOwnProperty;
 
 /**
  * Remove all enumerable properties from an given object.
