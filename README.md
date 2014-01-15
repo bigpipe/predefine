@@ -1,6 +1,6 @@
 # predefine
 
-[![Build Status](https://travis-ci.org/3rd-Eden/predefine.png)](https://travis-ci.org/3rd-Eden/predefine)
+[![Build Status](https://travis-ci.org/bigpipe/predefine.png)](https://travis-ci.org/bigpipe/predefine)
 
 When creating objects or prototypes using `Object.defineProperties` or
 `Object.defineProperty` it make your code look really verbose by all the
