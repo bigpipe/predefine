@@ -108,4 +108,22 @@ describe('predefine', function () {
       expect(obj.bar).to.equal(undefined);
     });
   });
+
+  describe('.lazy', function () {
+    it('adds a lazy loading property to the object', function () {
+      var obj = {}
+        , calls = 0;
+
+      predefine.lazy(obj, 'foo', function () {
+        calls++;
+        return 'foo';
+      });
+
+      expect(calls).to.equal(0);
+      expect(obj.foo).to.equal('foo');
+      expect(calls).to.equal(1);
+      expect(obj.foo).to.equal('foo');
+      expect(calls).to.equal(1);
+    });
+  });
 });

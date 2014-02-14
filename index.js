@@ -63,6 +63,32 @@ function predefine(obj, pattern) {
 }
 
 /**
+ * Lazy initialization pattern.
+ *
+ * @param {Object} obj The object where we need to add lazy loading prop.
+ * @param {String} prop The name of the property that should lazy load.
+ * @param {Function} fn The function that returns the lazy laoded value.
+ * @api public
+ */
+function lazy(obj, prop, fn) {
+  Object.defineProperty(obj, prop, {
+    configurable: true,
+
+    get: function get() {
+      return Object.defineProperty(this, prop, {
+        value: fn.call(this)
+      })[prop];
+    },
+
+    set: function set(value) {
+      return Object.defineProperty(this, prop, {
+        value: value
+      })[prop];
+    }
+  });
+}
+
+/**
  * A Object could override the `hasOwnProperty` method so we cannot blindly
  * trust the value of `obj.hasOwnProperty` so instead we get `hasOwnProperty`
  * directly from the Object.
@@ -223,6 +249,7 @@ predefine.remove = remove;
 predefine.merge = merge;
 predefine.mixin = mixin;
 predefine.each = each;
+predefine.lazy = lazy;
 
 //
 // Predefined description templates.
