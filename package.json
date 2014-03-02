@@ -6,6 +6,10 @@
   "scripts": {
     "test": "mocha $(find test -name '*.test.js')"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bigpipe/predefine.git"
+  },
   "keywords": [
     "predefine",
     "define",
