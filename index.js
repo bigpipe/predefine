@@ -54,8 +54,8 @@ function predefine(obj, pattern) {
     };
 
     //
-    // Prevent thrown errors when we want to set the same header again using our
-    // own `setHeader` method.
+    // Prevent thrown errors when we attempt to override a readonly
+    // property
     //
     var described = Object.getOwnPropertyDescriptor(obj, method);
     if (described && !described.configurable) {
