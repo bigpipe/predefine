@@ -53,6 +53,15 @@ function predefine(obj, pattern) {
       value: description
     };
 
+    //
+    // Prevent thrown errors when we want to set the same header again using our
+    // own `setHeader` method.
+    //
+    var described = Object.getOwnPropertyDescriptor(obj, method);
+    if (described && !described.configurable) {
+      return predefined;
+    }
+
     Object.defineProperty(obj, method, !clean
       ? predefine.mixin(pattern, description)
       : description
