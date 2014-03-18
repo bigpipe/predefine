@@ -33,6 +33,15 @@ describe('predefine', function () {
     expect(Object.keys(obj).length).to.equal(0);
   });
 
+  it('does not throw when attempting to override', function () {
+    var obj = {};
+
+    var readable = predefine(obj, predefine.READABLE);
+
+    readable('foo', 'bar');
+    readable('foo', 'bar');
+  });
+
   describe('.descriptor', function () {
     it('sees non Objects as an invalid description', function () {
       expect(predefine.descriptor([])).to.equal(false);
