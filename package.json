@@ -1,6 +1,6 @@
 {
   "name": "predefine",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Predefine your Object.defineProperties to create a more human readable API.",
   "main": "index.js",
   "scripts": {
