@@ -42,6 +42,26 @@ describe('predefine', function () {
     expect(obj.cache.set).to.be.a('function');
   });
 
+  it('supports overriding', function () {
+    var obj = {}
+      , value = 'str'
+      , readable = predefine(obj, predefine.READABLE);
+
+    readable('cache', {
+      get: function () { return value; },
+      set: function (data) { value = data; return value; }
+    }, true);
+
+    expect(obj.cache).to.be.a('string');
+    expect(obj.cache).to.equal('str');
+    expect(obj.cache).to.equal(value);
+
+    obj.cache = 'bar';
+    expect(obj.cache).to.be.a('string');
+    expect(obj.cache).to.equal('bar');
+    expect(obj.cache).to.equal(value);
+  });
+
   it('does not throw when attempting to override', function () {
     var obj = {};
 

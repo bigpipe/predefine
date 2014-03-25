@@ -90,7 +90,9 @@ function predefine(obj, pattern) {
     //
     if (
          !predefine.descriptor(description)
-      || is(description, 'object') && !predefine.descriptor(predefine.mixin({}, pattern, description))
+      || is(description, 'object')
+         && !clean
+         && !predefine.descriptor(predefine.mixin({}, pattern, description))
     ) { description = {
         value: description
       };
