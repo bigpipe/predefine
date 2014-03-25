@@ -31,6 +31,15 @@ describe('predefine', function () {
     obj.bar = 'foo';
     expect(obj.bar).to.equal('foo');
     expect(Object.keys(obj).length).to.equal(0);
+
+    readable('cache', {
+      get: function () { },
+      set: function () { }
+    });
+
+    expect(obj.cache).to.be.a('object');
+    expect(obj.cache.get).to.be.a('function');
+    expect(obj.cache.set).to.be.a('function');
   });
 
   it('does not throw when attempting to override', function () {
@@ -70,6 +79,26 @@ describe('predefine', function () {
         enumerable: true,
         configurable: false
       })).to.equal(true);
+
+      expect(predefine.descriptor({
+        set: function() {},
+        get: function() {}
+      })).to.equal(true);
+
+      expect(predefine.descriptor({
+        set: function() {},
+        get: function() {},
+        value: 'foo'
+      })).to.equal(false);
+
+      expect(predefine.descriptor({
+        set: true,
+        get: false,
+      })).to.equal(false);
+
+      expect(predefine.descriptor({
+        enumerable: function () {}
+      })).to.equal(false);
     });
 
     it('doesnt accept non description keys in a object', function () {

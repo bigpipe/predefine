@@ -1,20 +1,22 @@
 'use strict';
 
+var toString = Object.prototype.toString;
+
 /**
  * The properties that need should be on a valid description object. As defined
  * in the specification.
  *
- * @type {Array}
+ * @type {Object}
  * @private
  */
-var description = [
-  'configurable',     // Property may be changed or deleted.
-  'enumerable',       // Shows up in enumeration of the properties.
-  'get',              // A function that serves as a getter.
-  'set',              // A function that serves as a setter.
-  'value',            // Value associated with the property.
-  'writable'          // Property may be changed using assignment.
-];
+var description = {
+  configurable: 'boolean',  // Property may be changed or deleted.
+  enumerable: 'boolean',    // Shows up in enumeration of the properties.
+  get: 'function',          // A function that serves as a getter.
+  set: 'function',          // A function that serves as a setter.
+  value: undefined,         // Value associated with the property.
+  writable: 'boolean'       // Property may be changed using assignment.
+};
 
 /**
  * Check if a given object is valid as an descriptor.
@@ -28,9 +30,45 @@ function descriptor(obj) {
 
   var keys = Object.keys(obj);
 
+  //
+  // A descriptor can only be a data or accessor descriptor, never both.
+  // An data descriptor can only specify:
+  //
+  // - configurable
+  // - enumerable
+  // - (optional) value
+  // - (optional) writable
+  //
+  // And an accessor descriptor can only specify;
+  //
+  // - configurable
+  // - enumerable
+  // - (optional) get
+  // - (optional) set
+  //
+  if (
+       ('value' in obj || 'writable' in obj)
+    && ('function' === typeof obj.set || 'function' === typeof obj.get)
+  ) return false;
+
   return !!keys.length && keys.every(function allowed(key) {
-    return !!~description.indexOf(key);
+    var type = description[key]
+      , valid = type === undefined || is(obj[key], type);
+
+    return key in description && valid;
   });
+}
+
+/**
+ * Get accurate type information for a given JavaScript thing.
+ *
+ * @param {Mixed} thing The thing we want to know.
+ * @param {String} type The class
+ * @returns {Boolean}
+ * @api private
+ */
+function is(thing, type) {
+  return toString.call(thing).toLowerCase().slice(8, -1) === type;
 }
 
 /**
@@ -38,6 +76,7 @@ function descriptor(obj) {
  *
  * @param {Object} obj The context, prototype or object we define on.
  * @param {Object} pattern The default description.
+ * @param {Boolean} override Override the pattern.
  * @returns {Function} The function definition.
  * @api public
  */
@@ -49,9 +88,13 @@ function predefine(obj, pattern) {
     // If we are given a description compatible Object, use that instead of
     // setting it as value. This allows easy creation of getters and setters.
     //
-    if (!predefine.descriptor(description)) description = {
-      value: description
-    };
+    if (
+         !predefine.descriptor(description)
+      || is(description, 'object') && !predefine.descriptor(predefine.mixin({}, pattern, description))
+    ) { description = {
+        value: description
+      };
+    }
 
     //
     // Prevent thrown errors when we attempt to override a readonly
@@ -63,7 +106,7 @@ function predefine(obj, pattern) {
     }
 
     Object.defineProperty(obj, method, !clean
-      ? predefine.mixin(pattern, description)
+      ? predefine.mixin({}, pattern, description)
       : description
     );
 
