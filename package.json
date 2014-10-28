@@ -27,7 +27,7 @@
   "author": "Arnout Kazemier",
   "license": "MIT",
   "dependencies": {
-    "extendable": "0.0.x"
+    "extendible": "0.1.x"
   },
   "devDependencies": {
     "pre-commit": "0.0.x",
