@@ -20,7 +20,7 @@ npm install --save predefine
 
 Let's start with a basic example of predefine usage:
 
-```
+```js
 var predefine = require('predefine');
 
 function Base() {
