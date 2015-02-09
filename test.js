@@ -1,14 +1,11 @@
 describe('predefine', function () {
   'use strict';
 
-  var predefine = require('../')
-    , chai = require('chai')
-    , expect = chai.expect;
-
-  chai.Assertion.includeStack = true;
+  var predefine = require('./')
+    , assume = require('assume');
 
   it('exports as function', function () {
-    expect(predefine).to.be.a('function');
+    assume(predefine).to.be.a('function');
   });
 
   it('correctly assigns the value', function () {
@@ -18,28 +15,28 @@ describe('predefine', function () {
       , readable = predefine(obj, predefine.READABLE);
 
     readable('foo', 'bar');
-    expect(obj.foo).to.equal('bar');
+    assume(obj.foo).to.equal('bar');
 
     try { obj.foo = 'foo'; }
     catch (e) {}
 
-    expect(obj.foo).to.equal('bar');
+    assume(obj.foo).to.equal('bar');
 
     writable('bar', 'bar');
-    expect(obj.bar).to.equal('bar');
+    assume(obj.bar).to.equal('bar');
 
     obj.bar = 'foo';
-    expect(obj.bar).to.equal('foo');
-    expect(Object.keys(obj).length).to.equal(0);
+    assume(obj.bar).to.equal('foo');
+    assume(Object.keys(obj).length).to.equal(0);
 
     readable('cache', {
       get: function () { },
       set: function () { }
     });
 
-    expect(obj.cache).to.be.a('object');
-    expect(obj.cache.get).to.be.a('function');
-    expect(obj.cache.set).to.be.a('function');
+    assume(obj.cache).to.be.a('object');
+    assume(obj.cache.get).to.be.a('function');
+    assume(obj.cache.set).to.be.a('function');
   });
 
   it('supports overriding', function () {
@@ -52,14 +49,14 @@ describe('predefine', function () {
       set: function (data) { value = data; return value; }
     }, true);
 
-    expect(obj.cache).to.be.a('string');
-    expect(obj.cache).to.equal('str');
-    expect(obj.cache).to.equal(value);
+    assume(obj.cache).to.be.a('string');
+    assume(obj.cache).to.equal('str');
+    assume(obj.cache).to.equal(value);
 
     obj.cache = 'bar';
-    expect(obj.cache).to.be.a('string');
-    expect(obj.cache).to.equal('bar');
-    expect(obj.cache).to.equal(value);
+    assume(obj.cache).to.be.a('string');
+    assume(obj.cache).to.equal('bar');
+    assume(obj.cache).to.equal(value);
   });
 
   it('does not throw when attempting to override', function () {
@@ -73,56 +70,56 @@ describe('predefine', function () {
 
   describe('.descriptor', function () {
     it('sees non Objects as an invalid description', function () {
-      expect(predefine.descriptor([])).to.equal(false);
-      expect(predefine.descriptor(undefined)).to.equal(false);
-      expect(predefine.descriptor(null)).to.equal(false);
-      expect(predefine.descriptor(0)).to.equal(false);
-      expect(predefine.descriptor(1)).to.equal(false);
-      expect(predefine.descriptor('')).to.equal(false);
-      expect(predefine.descriptor(new Date)).to.equal(false);
+      assume(predefine.descriptor([])).to.equal(false);
+      assume(predefine.descriptor(undefined)).to.equal(false);
+      assume(predefine.descriptor(null)).to.equal(false);
+      assume(predefine.descriptor(0)).to.equal(false);
+      assume(predefine.descriptor(1)).to.equal(false);
+      assume(predefine.descriptor('')).to.equal(false);
+      assume(predefine.descriptor(new Date)).to.equal(false);
     });
 
     it('disallows empty objects', function () {
-      expect(predefine.descriptor({})).to.equal(false);
+      assume(predefine.descriptor({})).to.equal(false);
     });
 
     it('correctly detects valid descriptions', function () {
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         enumerable: false
       })).to.equal(true);
 
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         enumerable: true
       })).to.equal(true);
 
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         enumerable: true,
         configurable: false
       })).to.equal(true);
 
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         set: function() {},
         get: function() {}
       })).to.equal(true);
 
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         set: function() {},
         get: function() {},
         value: 'foo'
       })).to.equal(false);
 
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         set: true,
         get: false,
       })).to.equal(false);
 
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         enumerable: function () {}
       })).to.equal(false);
     });
 
     it('doesnt accept non description keys in a object', function () {
-      expect(predefine.descriptor({
+      assume(predefine.descriptor({
         enumerable: true,
         configurable: false,
         fake: true
@@ -132,15 +129,15 @@ describe('predefine', function () {
 
   describe('patterns', function () {
     it('exposes the READABLE pattern', function () {
-      expect(predefine.READABLE).to.be.a('object');
-      expect(predefine.READABLE.enumerable).to.equal(false);
+      assume(predefine.READABLE).to.be.a('object');
+      assume(predefine.READABLE.enumerable).to.equal(false);
     });
 
     it('exposes the WRITABLE pattern', function () {
-      expect(predefine.WRITABLE).to.be.a('object');
-      expect(predefine.WRITABLE.configurable).to.equal(true);
-      expect(predefine.WRITABLE.enumerable).to.equal(false);
-      expect(predefine.WRITABLE.writable).to.equal(true);
+      assume(predefine.WRITABLE).to.be.a('object');
+      assume(predefine.WRITABLE.configurable).to.equal(true);
+      assume(predefine.WRITABLE.enumerable).to.equal(false);
+      assume(predefine.WRITABLE.writable).to.equal(true);
     });
   });
 
@@ -149,8 +146,8 @@ describe('predefine', function () {
       var obj = { foo: 'bar' };
 
       predefine.remove(obj);
-      expect(obj.foo).to.equal(undefined);
-      expect('foo' in obj).to.equal(false);
+      assume(obj.foo).to.equal(undefined);
+      assume('foo' in obj).to.equal(false);
     });
 
     it('doesnt remove defined properties', function () {
@@ -158,12 +155,12 @@ describe('predefine', function () {
         , define = predefine(obj);
 
       define('foo', 'bar');
-      expect(obj.foo).to.equal('bar');
-      expect(obj.bar).to.equal('bar');
+      assume(obj.foo).to.equal('bar');
+      assume(obj.bar).to.equal('bar');
 
       predefine.remove(obj);
-      expect(obj.foo).to.equal('bar');
-      expect(obj.bar).to.equal(undefined);
+      assume(obj.foo).to.equal('bar');
+      assume(obj.bar).to.equal(undefined);
     });
   });
 
@@ -177,11 +174,11 @@ describe('predefine', function () {
         return 'foo';
       });
 
-      expect(calls).to.equal(0);
-      expect(obj.foo).to.equal('foo');
-      expect(calls).to.equal(1);
-      expect(obj.foo).to.equal('foo');
-      expect(calls).to.equal(1);
+      assume(calls).to.equal(0);
+      assume(obj.foo).to.equal('foo');
+      assume(calls).to.equal(1);
+      assume(obj.foo).to.equal('foo');
+      assume(calls).to.equal(1);
     });
   });
 });
