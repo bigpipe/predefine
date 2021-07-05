@@ -181,4 +181,12 @@ describe('predefine', function () {
       assume(calls).to.equal(1);
     });
   });
+
+  describe('.merge', function () {
+    it('avoids prototype polluting', function () {
+      predefine.merge({}, JSON.parse('{"__proto__": {"a": "b"}}'));
+
+      assume(({}).a).to.be.undefined();
+   });
+  });
 });
