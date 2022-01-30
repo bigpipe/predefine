@@ -1,7 +1,5 @@
 # predefine
 
-[![Build Status](https://travis-ci.org/bigpipe/predefine.png)](https://travis-ci.org/bigpipe/predefine)
-
 When creating objects or prototypes using `Object.defineProperties` or
 `Object.defineProperty` it make your code look really verbose by all the
 property descriptions that it needs. Most of the time, they are the same. They
@@ -72,8 +70,8 @@ This is a simple helper function to create descriptions that can be used within
 `Object.create` and `Object.defineProperties`.
 
 ```js
-var data = Object.create(null, predefine.create('foo', { 
-  value: 'bar' 
+var data = Object.create(null, predefine.create('foo', {
+  value: 'bar'
 }));
 
 var data = Object.create(null, predefine.create('foo', {
