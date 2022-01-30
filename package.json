@@ -4,10 +4,8 @@
   "description": "Predefine your Object.defineProperties to create a more human readable API.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test.js",
     "watch": "mocha --watch test.js",
-    "coverage": "istanbul cover ./node_modules/.bin/_mocha -- test.js",
-    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- test.js"
+    "test": "nyc mocha -- test.js"
   },
   "repository": {
     "type": "git",
@@ -33,9 +31,9 @@
     "extendible": "0.1.x"
   },
   "devDependencies": {
-    "assume": "~1.5.0",
-    "istanbul": "~0.4.5",
-    "mocha": "~3.1.2",
+    "assume": "~2.3.0",
+    "nyc": "^15.1.0",
+    "mocha": "~9.2.0",
     "pre-commit": "~1.2.0"
   }
 }
