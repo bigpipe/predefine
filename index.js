@@ -282,7 +282,7 @@ function merge(target, additional) {
     each(additional, function objectForEach(key, value) {
       if (target[key] === undefined) {
         result[key] = value;
-      } else if (Object.hasOwnProperty.call(target, key)){
+      } else if (has.call(target, key)) {
         result[key] = merge(target[key], additional[key]);
       }
     });
