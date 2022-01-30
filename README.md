@@ -1,5 +1,7 @@
 # predefine
 
+[![Node.js CI](https://github.com/bigpipe/predefine/actions/workflows/ci.yml/badge.svg)](https://github.com/bigpipe/predefine/actions/workflows/ci.yml)
+
 When creating objects or prototypes using `Object.defineProperties` or
 `Object.defineProperty` it make your code look really verbose by all the
 property descriptions that it needs. Most of the time, they are the same. They
